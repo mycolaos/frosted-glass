@@ -64,11 +64,11 @@
         type="button">Click<frosted-glass></frosted-glass></button>
     </section>
     <section class="my-20 flex flex-col items-center gap-4">
-      <a class="underline" href="#" onmouseenter="this.querySelector('frosted-glass').style.setProperty('--ice-opacity',
-      '.5')" onmouseleave="this.querySelector('frosted-glass').style.setProperty('--ice-opacity',
+      <a class="underline" href="#" onmouseenter="this.querySelector('frosted-glass').setAttribute('opacity',
+      '.5')" onmouseleave="this.querySelector('frosted-glass').setAttribute('opacity-coefficient',
       '2')">Link
         <!-- More opaque example -->
-        <frosted-glass style="--ice-opacity: 2;"></frosted-glass>
+        <frosted-glass opacity-coefficient="2"></frosted-glass>
       </a>
       <div class="flex flex-col gap-y-2">
         <h2 class="text-2xl font-bold rounded-xs">The Glass Season
@@ -79,7 +79,7 @@
           <p>Frozen breath of winter's air</p>
           <p>Silent, still, and sharp.</p>
           <!-- More translucent example -->
-          <frosted-glass style="--ice-opacity: .5"></frosted-glass>
+          <frosted-glass opacity-coefficient=".5"></frosted-glass>
         </div>
       </div>
     </section>

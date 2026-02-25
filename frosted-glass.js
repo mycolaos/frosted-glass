@@ -65,9 +65,9 @@ class FrostedGlass extends HTMLElement {
   initialParentPosition = null;
   parentPositionSetByUs = 'relative';
 
-  // Observe the 'colorRGB' attribute for changes
+  // Observe the 'colorRGB' and 'opacity-coefficient' attributes for changes
   static get observedAttributes() {
-    return ['colorRGB'];
+    return ['colorRGB', 'opacity-coefficient'];
   }
 
   get melted() {
@@ -82,15 +82,39 @@ class FrostedGlass extends HTMLElement {
     }
   }
 
+  /**
+   * Gets the colorRGB attribute value.
+   */
   get colorRGB() {
     return this.getAttribute('colorRGB');
   }
 
+  /**
+   * Sets the colorRGB attribute value.
+   */
   set colorRGB(value) {
     if (value) {
       this.setAttribute('colorRGB', value);
     } else {
       this.removeAttribute('colorRGB');
+    }
+  }
+
+  /**
+   * Gets the opacity-coefficient attribute value.
+   */
+  get opacityCoefficient() {
+    return this.getAttribute('opacity-coefficient');
+  }
+
+  /**
+   * Sets the opacity-coefficient attribute value.
+   */
+  set opacityCoefficient(value) {
+    if (value !== null && value !== undefined) {
+      this.setAttribute('opacity-coefficient', value);
+    } else {
+      this.removeAttribute('opacity-coefficient');
     }
   }
 
@@ -134,6 +158,12 @@ class FrostedGlass extends HTMLElement {
     if (this.colorRGB) {
       this.setIceColorFromAttribute(this.colorRGB);
     }
+
+    // If opacity-coefficient attribute is present, set the --ice-opacity CSS
+    // variable
+    if (this.opacityCoefficient) {
+      this.setIceOpacityFromAttribute(this.opacityCoefficient);
+    }
   }
 
   disconnectedCallback() {
@@ -148,7 +178,21 @@ class FrostedGlass extends HTMLElement {
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'colorRGB') {
       this.setIceColorFromAttribute(newValue);
+    } else if (name === 'opacity-coefficient') {
+      this.setIceOpacityFromAttribute(newValue);
     }
+  }
+  /**
+   * Sets the --ice-opacity CSS variable from the opacity-coefficient attribute.
+   * Accepts a number greater or equal to 0.
+   */
+  setIceOpacityFromAttribute(value) {
+    const num = parseFloat(value);
+    if (isNaN(num) || num < 0) {
+      console.error('opacity-coefficient attribute must be a number greater or equal to 0.');
+      return;
+    }
+    this._inner.style.setProperty('--ice-opacity', num);
   }
 
   /**
