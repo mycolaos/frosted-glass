@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frosted Glass</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script defer src="frosted-glass.js"></script>
+  <style>
+    :root {
+      color-scheme: light dark;
+    }
+
+    body {
+      background: light-dark(rgb(255, 221, 211), rgb(52, 31, 77));
+      color: light-dark(#336, white);
+    }
+
+    @layer base {
+
+      button {
+        background: rgb(43, 127, 255);
+        color: white;
+        font-weight: bold;
+        padding: .5rem 1rem;
+        border-radius: calc(infinity * 1px);
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: rgb(20, 71, 230);
+      }
+
+      a,
+      h2,
+      p {
+        padding: 0.1rem .5rem;
+      }
+    }
+  </style>
+
+<body class="width-screen h-screen">
+  <div class="mt-[20vh] mx-auto w-fit">
+    <section class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex">
+      <div class="flex gap-0 text-xs font-mono rounded-full">
+        <button type="button" onclick="document.documentElement.style.colorScheme = 'light';"
+          class="rounded-e-none bg-slate-600 hover:bg-slate-700 text-gray-300 hover:text-white border-solid border-stone-700 border-2 border-r-0">Light</button>
+        <button type="button" onclick="document.documentElement.style.colorScheme = 'dark';"
+          class="rounded-s-none bg-slate-600 hover:bg-slate-700 text-gray-300 hover:text-white border-solid border-stone-700 border-2 border-l-0">Dark</button>
+        <frosted-glass></frosted-glass>
+      </div>
+    </section>
+    <section>
+      <button type="button">Click<frosted-glass></frosted-glass></button>
+      <button class="bg-red-500 hover:bg-red-700" type="button">Click<frosted-glass></frosted-glass></button>
+      <button class="bg-green-500 border-4 border-solid border-black"
+        type="button">Click<frosted-glass></frosted-glass></button>
+      <button class="bg-orange-400" type="button">Click<frosted-glass></frosted-glass></button>
+      <button class="bg-white text-black border-2" type="button">Click<frosted-glass on-light></frosted-glass></button>
+      <button class="bg-black text-white border-2 border-gray-500"
+        type="button">Click<frosted-glass></frosted-glass></button>
+    </section>
+    <section class="my-20 flex flex-col items-center gap-4">
+      <a class="underline" href="#" onmouseenter="this.querySelector('frosted-glass').style.setProperty('--ice-opacity',
+      '.5')" onmouseleave="this.querySelector('frosted-glass').style.setProperty('--ice-opacity',
+      '2')">Link
+        <!-- More opaque example -->
+        <frosted-glass style="--ice-opacity: 2;"></frosted-glass>
+      </a>
+      <div class="flex flex-col gap-y-2">
+        <h2 class="text-2xl font-bold rounded-xs">The Glass Season
+          <frosted-glass></frosted-glass>
+        </h2>
+        <div>
+          <p>Clear glass, cold to touch</p>
+          <p>Frozen breath of winter's air</p>
+          <p>Silent, still, and sharp.</p>
+          <!-- More translucent example -->
+          <frosted-glass style="--ice-opacity: .5"></frosted-glass>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+
+</html>
