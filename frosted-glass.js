@@ -65,9 +65,26 @@ class FrostedGlass extends HTMLElement {
   initialParentPosition = null;
   parentPositionSetByUs = 'relative';
 
-  // Observe the 'colorRGB' and 'opacity-coefficient' attributes for changes
+  // Observe the 'colorRGB', 'opacity-coefficient', and 'z-index' attributes for changes
   static get observedAttributes() {
-    return ['colorRGB', 'opacity-coefficient'];
+    return ['colorRGB', 'opacity-coefficient', 'z-index'];
+  }
+  /**
+   * Gets the z-index attribute value.
+   */
+  get zIndex() {
+    return this.getAttribute('z-index');
+  }
+
+  /**
+   * Sets the z-index attribute value.
+   */
+  set zIndex(value) {
+    if (value !== null && value !== undefined) {
+      this.setAttribute('z-index', value);
+    } else {
+      this.removeAttribute('z-index');
+    }
   }
 
   get melted() {
@@ -164,6 +181,11 @@ class FrostedGlass extends HTMLElement {
     if (this.opacityCoefficient) {
       this.setIceOpacityFromAttribute(this.opacityCoefficient);
     }
+
+    // If z-index attribute is present, set the z-index style
+    if (this.zIndex) {
+      this.setZIndexFromAttribute(this.zIndex);
+    }
   }
 
   disconnectedCallback() {
@@ -180,7 +202,20 @@ class FrostedGlass extends HTMLElement {
       this.setIceColorFromAttribute(newValue);
     } else if (name === 'opacity-coefficient') {
       this.setIceOpacityFromAttribute(newValue);
+    } else if (name === 'z-index') {
+      this.setZIndexFromAttribute(newValue);
     }
+  }
+  /**
+   * Sets the z-index style property on the inner element from the z-index attribute.
+   * Accepts any valid CSS z-index value (number or 'auto').
+   */
+  setZIndexFromAttribute(value) {
+    if (value === null || value === undefined || value === '') {
+      this._inner.style.removeProperty('z-index');
+      return;
+    }
+    this._inner.style.zIndex = value;
   }
   /**
    * Sets the --ice-opacity CSS variable from the opacity-coefficient attribute.
