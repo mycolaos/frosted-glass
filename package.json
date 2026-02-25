@@ -1,0 +1,28 @@
+{
+  "name": "@mycolaos/frosted-glass",
+  "version": "1.0.0",
+  "description": "Web component for creating frosted glass effects on web elements.",
+  "main": "frosted-glass.js",
+  "keywords": [
+    "frosted-glass",
+    "glass",
+    "ice",
+    "glassmorphism",
+    "blur",
+    "translucent",
+    "visual-effect"
+  ],
+  "author": {
+    "name": "Mycolaos",
+    "url": "https://mycolaos.com/"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mycol/frosted-glass"
+  },
+  "homepage": "https://github.com/mycolaos/frosted-glass#readme",
+  "bugs": {
+    "url": "https://github.com/mycolaos/frosted-glass/issues"
+  }
+}
