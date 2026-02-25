@@ -65,6 +65,11 @@ class FrostedGlass extends HTMLElement {
   initialParentPosition = null;
   parentPositionSetByUs = 'relative';
 
+  // Observe the 'colorRGB' attribute for changes
+  static get observedAttributes() {
+    return ['colorRGB'];
+  }
+
   get melted() {
     return this._internals.states.has("melted");
   }
@@ -74,6 +79,18 @@ class FrostedGlass extends HTMLElement {
       this._internals.states.add("melted");
     } else {
       this._internals.states.delete("melted");
+    }
+  }
+
+  get colorRGB() {
+    return this.getAttribute('colorRGB');
+  }
+
+  set colorRGB(value) {
+    if (value) {
+      this.setAttribute('colorRGB', value);
+    } else {
+      this.removeAttribute('colorRGB');
     }
   }
 
@@ -112,6 +129,11 @@ class FrostedGlass extends HTMLElement {
     this._inner.style.setProperty('--right-border-offset', '-' + borderSize.right);
     this._inner.style.setProperty('--bottom-border-offset', '-' + borderSize.bottom);
     this._inner.style.setProperty('--left-border-offset', '-' + borderSize.left);
+
+    // If colorRGB attribute is present, set the --ice-color CSS variable
+    if (this.colorRGB) {
+      this.setIceColorFromAttribute(this.colorRGB);
+    }
   }
 
   disconnectedCallback() {
@@ -121,6 +143,33 @@ class FrostedGlass extends HTMLElement {
     if (this.parentElement && this.parentElement.style.position === this.parentPositionSetByUs) {
       this.parentElement.style.position = this.initialParentPosition;
     }
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'colorRGB') {
+      this.setIceColorFromAttribute(newValue);
+    }
+  }
+
+  /**
+   * Sets the --ice-color CSS variable on the inner element if the value is a valid RGB string.
+   * Only accepts the format "r,g,b" where r, g, b are integers 0-255.
+   */
+  setIceColorFromAttribute(value) {
+    if (typeof value !== 'string') {
+      console.error('colorRGB attribute must be a string in the format "r,g,b"');
+      return;
+    };
+    // Validate the format: "r,g,b" where r,g,b are 0-255
+    const rgbPattern = /^\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*$/;
+    const match = value.match(rgbPattern);
+    if (!match) {
+      console.error('colorRGB attribute must be in the format "r,g,b" with values between 0 and 255');
+      return;
+    }
+
+    const [r, g, b] = match.slice(1, 4);
+    this._inner.style.setProperty('--ice-color', `${r}, ${g}, ${b}`);
   }
 
   static getSizeOfBorders(el) {
