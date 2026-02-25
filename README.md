@@ -22,6 +22,18 @@ This effect creates a frosted glass appearance over any element, simulating the 
 ```html
 <script src="frosted-glass.js"></script>
 ```
+or
+
+Install via npm:
+```bash
+npm install @mycolaos/frosted-glass
+```
+
+or yarn:
+```bash
+yarn add @mycolaos/frosted-glass
+```
+
 2. Use the `<frosted-glass>` tag inside elements you want to apply the frosted glass effect to:
 ```html
 <button class="frosty-button">
