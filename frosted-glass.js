@@ -1,3 +1,9 @@
+/**
+ * Author: Mycolaos - mycolaos.com
+ * 
+ * Please, keep this small credit in the code, thank you! 🤝
+ */
+
 const sheet = new CSSStyleSheet();
 sheet.replaceSync(`
   :host, frosted-glass-inner {
