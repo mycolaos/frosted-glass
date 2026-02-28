@@ -64,12 +64,24 @@
         type="button">Click<frosted-glass></frosted-glass></button>
     </section>
     <section class="my-20 flex flex-col items-center gap-4">
-      <a class="underline" href="#" onmouseenter="this.querySelector('frosted-glass').setAttribute('opacity',
+      <a class="underline" href="#" onmouseenter="this.querySelector('frosted-glass').setAttribute('opacity-coefficient',
       '.5')" onmouseleave="this.querySelector('frosted-glass').setAttribute('opacity-coefficient',
       '2')">Link
         <!-- More opaque example -->
         <frosted-glass opacity-coefficient="2"></frosted-glass>
       </a>
+      <!-- Color examples -->
+      <div class="flex gap-2 items-stretch [&>span]:p-2">
+        <span>Red<frosted-glass color-rgb="255,0,0"></frosted-glass></span>
+        <span>Neon<frosted-glass color-rgb="57,255,20"></frosted-glass></span>
+        <span>Purple<frosted-glass color-rgb="128,0,128"></frosted-glass></span>
+        <span>Metal<frosted-glass color-rgb="192,192,192"></frosted-glass></span>
+        <span>Black<frosted-glass color-rgb="0,0,0"></frosted-glass></span>
+        <span>Yellow<frosted-glass color-rgb="255,255,0"></frosted-glass></span>
+        <span>Pink<frosted-glass color-rgb="255,192,203"></frosted-glass></span>
+        <span>Cyan<frosted-glass color-rgb="0,255,255"></frosted-glass></span>
+      </div>
+      <!-- Header + paragraph example -->
       <div class="flex flex-col gap-y-2">
         <h2 class="text-2xl font-bold rounded-xs">The Glass Season
           <frosted-glass></frosted-glass>

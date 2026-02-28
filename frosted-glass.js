@@ -71,9 +71,9 @@ class FrostedGlass extends HTMLElement {
   initialParentPosition = null;
   parentPositionSetByUs = 'relative';
 
-  // Observe the 'colorRGB', 'opacity-coefficient', and 'z-index' attributes for changes
+  // Observe the 'color-rgb', 'opacity-coefficient', and 'z-index' attributes for changes
   static get observedAttributes() {
-    return ['colorRGB', 'opacity-coefficient', 'z-index'];
+    return ['color-rgb', 'opacity-coefficient', 'z-index', 'colorrgb'];
   }
   /**
    * Gets the z-index attribute value.
@@ -106,20 +106,20 @@ class FrostedGlass extends HTMLElement {
   }
 
   /**
-   * Gets the colorRGB attribute value.
+   * Gets the color-rgb attribute value.
    */
-  get colorRGB() {
-    return this.getAttribute('colorRGB');
+  get colorRgb() {
+    return this.getAttribute('color-rgb');
   }
 
   /**
-   * Sets the colorRGB attribute value.
+   * Sets the color-rgb attribute value.
    */
-  set colorRGB(value) {
+  set colorRgb(value) {
     if (value) {
-      this.setAttribute('colorRGB', value);
+      this.setAttribute('color-rgb', value);
     } else {
-      this.removeAttribute('colorRGB');
+      this.removeAttribute('color-rgb');
     }
   }
 
@@ -177,9 +177,9 @@ class FrostedGlass extends HTMLElement {
     this._inner.style.setProperty('--bottom-border-offset', '-' + borderSize.bottom);
     this._inner.style.setProperty('--left-border-offset', '-' + borderSize.left);
 
-    // If colorRGB attribute is present, set the --ice-color CSS variable
-    if (this.colorRGB) {
-      this.setIceColorFromAttribute(this.colorRGB);
+    // If color-rgb attribute is present, set the --ice-color CSS variable
+    if (this.colorRgb) {
+      this.setIceColorFromAttribute(this.colorRgb);
     }
 
     // If opacity-coefficient attribute is present, set the --ice-opacity CSS
@@ -204,7 +204,7 @@ class FrostedGlass extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'colorRGB') {
+    if (name === 'color-rgb') {
       this.setIceColorFromAttribute(newValue);
     } else if (name === 'opacity-coefficient') {
       this.setIceOpacityFromAttribute(newValue);
@@ -242,14 +242,14 @@ class FrostedGlass extends HTMLElement {
    */
   setIceColorFromAttribute(value) {
     if (typeof value !== 'string') {
-      console.error('colorRGB attribute must be a string in the format "r,g,b"');
+      console.error('color-rgb attribute must be a string in the format "r,g,b"');
       return;
     };
     // Validate the format: "r,g,b" where r,g,b are 0-255
     const rgbPattern = /^\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*$/;
     const match = value.match(rgbPattern);
     if (!match) {
-      console.error('colorRGB attribute must be in the format "r,g,b" with values between 0 and 255');
+      console.error('color-rgb attribute must be in the format "r,g,b" with values between 0 and 255');
       return;
     }
 
