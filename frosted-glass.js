@@ -17,7 +17,6 @@ sheet.replaceSync(`
     --bottom-border-offset: 0;
     --left-border-offset: 0;
     --ice-color: 255, 255, 255;
-    --on-light-ice-color: 0, 187, 255;
     --ice-opacity: .15;
 
     /** The effect shouldn't interfere with the pointer events of the underlying content. */
@@ -57,10 +56,6 @@ sheet.replaceSync(`
     background-size: 100% 100%;
   }
 
-  :host([on-light]) frosted-glass-inner {
-    filter: blur(1px);
-    --ice-color: var(--on-light-ice-color);
-  }
   :host(:state(melted)) frosted-glass-inner {
     box-shadow: 0 0 8px rgba(var(--ice-color), calc(var(--ice-opacity) * 3.33)),
       inset 0 0 3px 0 rgba(var(--ice-color), calc(var(--ice-opacity) * 3.33));

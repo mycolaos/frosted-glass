@@ -13,7 +13,6 @@ This effect creates a frosted glass appearance over any element, simulating the 
 ### Attributes
 
 - `color-rgb`: Sets the color of the frosted glass effect. Accepts `r,g,b` value. For example, `color-rgb="255,0,0"` for red. Default is `255, 255, 255` (white).
-- `on-light`: Convenience attribute, sets the color to `0, 187, 255` (light blue) for a bright, icy look, convenient for elements with white or very light backgrounds.
 - `opacity`: Adjusts the opacity of the frosted effect. Accepts a number between 0 (fully transparent) and 1 (fully opaque). This value controls the opaqueness of the frosted glass background color. Note: the crystalline patterns and highlights may use different opacity levels relative to this value for a more realistic effect.
 - `z-index`: Sets the z-index of the frosted glass layer. Accepts any valid CSS z-index value (number or 'auto').
 
@@ -43,12 +42,12 @@ yarn add @mycolaos/frosted-glass
 
 <button class="button-with-white-background">
   <!-- Your content here -->
-  <frosted-glass on-light></frosted-glass>
+  <frosted-glass color-rgb="0,187,255"></frosted-glass>
 </button>
 
 <p>
   Some text with a frosted glass effect.
-  <frosted-glass color="0, 200, 255" opacity="0.5"></frosted-glass>
+  <frosted-glass color-rgb="0, 200, 255" opacity="0.5"></frosted-glass>
 </p>
 ```
 
