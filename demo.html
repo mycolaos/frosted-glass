@@ -58,17 +58,16 @@
         type="button">Click<frosted-glass></frosted-glass></button>
       <button class="bg-orange-400" type="button">Click<frosted-glass></frosted-glass></button>
       <button class="bg-white text-black border-2" type="button">Click<frosted-glass on-light></frosted-glass></button>
-      <button class="bg-white text-black border-2" type="button">Click<frosted-glass
-          colorRGB="255,0,0"></frosted-glass></button>
+      <button class="bg-white text-black border-2" type="button">Click<frosted-glass></frosted-glass></button>
       <button class="bg-black text-white border-2 border-gray-500"
         type="button">Click<frosted-glass></frosted-glass></button>
     </section>
     <section class="my-20 flex flex-col items-center gap-4">
-      <a class="underline" href="#" onmouseenter="this.querySelector('frosted-glass').setAttribute('opacity-coefficient',
-      '.5')" onmouseleave="this.querySelector('frosted-glass').setAttribute('opacity-coefficient',
-      '2')">Link
+      <a class="underline" href="#" onmouseenter="this.querySelector('frosted-glass').setAttribute('opacity',
+      '.05')" onmouseleave="this.querySelector('frosted-glass').setAttribute('opacity',
+      '.3')">Link
         <!-- More opaque example -->
-        <frosted-glass opacity-coefficient="2"></frosted-glass>
+        <frosted-glass opacity=".3"></frosted-glass>
       </a>
       <!-- Color examples -->
       <div class="flex gap-2 items-stretch [&>span]:p-2">
@@ -81,6 +80,32 @@
         <span>Pink<frosted-glass color-rgb="255,192,203"></frosted-glass></span>
         <span>Cyan<frosted-glass color-rgb="0,255,255"></frosted-glass></span>
       </div>
+      <!-- Opacity examples -->
+      <section class="flex gap-4 justify-center [&>span]:p-2">
+        <span>0<frosted-glass opacity="0"></frosted-glass></span>
+        <span>.01<frosted-glass opacity=".01"></frosted-glass></span>
+        <span>.02<frosted-glass opacity=".02"></frosted-glass></frosted-glass></span>
+        <span>.03<frosted-glass opacity=".03"></frosted-glass></frosted-glass></span>
+        <span>.04<frosted-glass opacity=".04"></frosted-glass></frosted-glass></span>
+        <span>.05<frosted-glass opacity=".05"></frosted-glass></frosted-glass></span>
+        <span>.06<frosted-glass opacity=".06"></frosted-glass></frosted-glass></span>
+        <span>.07<frosted-glass opacity=".07"></frosted -glass></frosted-glass></span>
+        <span>.08<frosted-glass opacity=".08"></frosted-glass></frosted-glass></span>
+        <span>.09<frosted-glass opacity=".09"></frosted-glass></frosted-glass></span>
+        <span>.1<frosted-glass opacity=".1"></frosted-glass></frosted-glass></span>
+      </section>
+      <section class="flex gap-4 justify-center [&>span]:p-2">
+        <span>.1<frosted-glass opacity=".1"></frosted-glass></span>
+        <span>.2<frosted-glass opacity=".2"></frosted-glass></span>
+        <span>.3<frosted-glass opacity=".3"></frosted-glass></span>
+        <span>.4<frosted-glass opacity=".4"></frosted-glass></span>
+        <span>.5<frosted-glass opacity=".5"></frosted-glass></span>
+        <span>.6<frosted-glass opacity=".6"></frosted-glass></span>
+        <span>.7<frosted-glass opacity=".7"></frosted-glass></span>
+        <span>.8<frosted-glass opacity=".8"></frosted-glass></span>
+        <span>.9<frosted-glass opacity=".9"></frosted-glass></span>
+        <span>1<frosted-glass opacity="1"></frosted-glass></span>
+      </section>
       <!-- Header + paragraph example -->
       <div class="flex flex-col gap-y-2">
         <h2 class="text-2xl font-bold rounded-xs">The Glass Season
@@ -91,7 +116,7 @@
           <p>Frozen breath of winter's air</p>
           <p>Silent, still, and sharp.</p>
           <!-- More translucent example -->
-          <frosted-glass opacity-coefficient=".5"></frosted-glass>
+          <frosted-glass opacity=".05"></frosted-glass>
         </div>
       </div>
     </section>

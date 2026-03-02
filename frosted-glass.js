@@ -18,7 +18,7 @@ sheet.replaceSync(`
     --left-border-offset: 0;
     --ice-color: 255, 255, 255;
     --on-light-ice-color: 0, 187, 255;
-    --ice-opacity: 1;
+    --ice-opacity: .15;
 
     /** The effect shouldn't interfere with the pointer events of the underlying content. */
     /** Use events on parent element instead of the glass element */
@@ -31,26 +31,26 @@ sheet.replaceSync(`
       var(--bottom-border-offset) var(--left-border-offset);
 
     /** Glass */
-    background-color: rgba(var(--ice-color), calc(var(--ice-opacity) * 0.15));
-    border: 2px solid rgba(var(--ice-color), calc(var(--ice-opacity) * 0.5));
-    box-shadow: 0 0 5px rgba(var(--ice-color), calc(var(--ice-opacity) * 0.5)),
-      inset 0 0 5px 2px rgba(var(--ice-color), calc(var(--ice-opacity) * 0.5));
+    background-color: rgba(var(--ice-color), var(--ice-opacity));
+    border: 2px solid rgba(var(--ice-color), calc(var(--ice-opacity) * 3.33));
+    box-shadow: 0 0 5px rgba(var(--ice-color), calc(var(--ice-opacity) * 3.33)),
+      inset 0 0 5px 2px rgba(var(--ice-color), calc(var(--ice-opacity) * 3.33));
     transition: all 0.5s ease;
     filter: blur(0.5px);
 
     /** Lucidity pattern */
     background-image: repeating-linear-gradient(
       -45deg,
-      rgba(var(--ice-color),  calc(var(--ice-opacity) * 0.25)),
-      rgba(var(--ice-color), calc(var(--ice-opacity) * 0.15)) 1px,
+      rgba(var(--ice-color),  calc(var(--ice-opacity) * 1.66)),
+      rgba(var(--ice-color), var(--ice-opacity)) 1px,
       transparent 1px,
       transparent 6px,
 
-      rgba(var(--ice-color), calc(var(--ice-opacity) * 0.25)) 9px,
+      rgba(var(--ice-color), calc(var(--ice-opacity) * 1.66)) 9px,
       transparent 11px,
       transparent 17px,
 
-      rgba(var(--ice-color), calc(var(--ice-opacity) * 0.25)) 19px,
+      rgba(var(--ice-color), calc(var(--ice-opacity) * 1.66)) 19px,
       transparent 20px,
       transparent 23px
     );
@@ -62,8 +62,8 @@ sheet.replaceSync(`
     --ice-color: var(--on-light-ice-color);
   }
   :host(:state(melted)) frosted-glass-inner {
-    box-shadow: 0 0 8px rgba(var(--ice-color), 0.5),
-      inset 0 0 3px 0 rgba(var(--ice-color), 0.5);
+    box-shadow: 0 0 8px rgba(var(--ice-color), calc(var(--ice-opacity) * 3.33)),
+      inset 0 0 3px 0 rgba(var(--ice-color), calc(var(--ice-opacity) * 3.33));
   }
 `);
 
@@ -71,9 +71,9 @@ class FrostedGlass extends HTMLElement {
   initialParentPosition = null;
   parentPositionSetByUs = 'relative';
 
-  // Observe the 'color-rgb', 'opacity-coefficient', and 'z-index' attributes for changes
+  // Observe the 'color-rgb', 'opacity', and 'z-index' attributes for changes
   static get observedAttributes() {
-    return ['color-rgb', 'opacity-coefficient', 'z-index', 'colorrgb'];
+    return ['color-rgb', 'opacity', 'z-index', 'colorrgb'];
   }
   /**
    * Gets the z-index attribute value.
@@ -124,20 +124,20 @@ class FrostedGlass extends HTMLElement {
   }
 
   /**
-   * Gets the opacity-coefficient attribute value.
+   * Gets the opacity attribute value.
    */
-  get opacityCoefficient() {
-    return this.getAttribute('opacity-coefficient');
+  get opacity() {
+    return this.getAttribute('opacity');
   }
 
   /**
-   * Sets the opacity-coefficient attribute value.
+   * Sets the opacity attribute value.
    */
-  set opacityCoefficient(value) {
+  set opacity(value) {
     if (value !== null && value !== undefined) {
-      this.setAttribute('opacity-coefficient', value);
+      this.setAttribute('opacity', value);
     } else {
-      this.removeAttribute('opacity-coefficient');
+      this.removeAttribute('opacity');
     }
   }
 
@@ -182,10 +182,9 @@ class FrostedGlass extends HTMLElement {
       this.setIceColorFromAttribute(this.colorRgb);
     }
 
-    // If opacity-coefficient attribute is present, set the --ice-opacity CSS
-    // variable
-    if (this.opacityCoefficient) {
-      this.setIceOpacityFromAttribute(this.opacityCoefficient);
+    // If opacity attribute is present, set the --ice-opacity CSS variable
+    if (this.opacity) {
+      this.setIceOpacityFromAttribute(this.opacity);
     }
 
     // If z-index attribute is present, set the z-index style
@@ -206,7 +205,7 @@ class FrostedGlass extends HTMLElement {
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'color-rgb') {
       this.setIceColorFromAttribute(newValue);
-    } else if (name === 'opacity-coefficient') {
+    } else if (name === 'opacity') {
       this.setIceOpacityFromAttribute(newValue);
     } else if (name === 'z-index') {
       this.setZIndexFromAttribute(newValue);
@@ -225,12 +224,12 @@ class FrostedGlass extends HTMLElement {
   }
   /**
    * Sets the --ice-opacity CSS variable from the opacity-coefficient attribute.
-   * Accepts a number greater or equal to 0.
+   * Accepts any number, just CSS opacity.
    */
   setIceOpacityFromAttribute(value) {
     const num = parseFloat(value);
-    if (isNaN(num) || num < 0) {
-      console.error('opacity-coefficient attribute must be a number greater or equal to 0.');
+    if (isNaN(num)) {
+      console.error('opacity-coefficient attribute must be a number.');
       return;
     }
     this._inner.style.setProperty('--ice-opacity', num);
