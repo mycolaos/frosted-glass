@@ -1,6 +1,6 @@
 {
   "name": "@mycolaos/frosted-glass",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Web component for creating frosted glass effects on web elements.",
   "main": "frosted-glass.js",
   "keywords": [
@@ -19,7 +19,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mycol/frosted-glass"
+    "url": "https://github.com/mycolaos/frosted-glass"
   },
   "homepage": "https://github.com/mycolaos/frosted-glass#readme",
   "bugs": {
