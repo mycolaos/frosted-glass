@@ -4,6 +4,12 @@
  * Please, keep this small credit in the code, thank you! 🤝
  */
 
+const defaultCssVars = {
+  '--base-ice-color': '255, 255, 255',
+  '--base-ice-opacity': '.15',
+  '--base-z-index': 'auto',
+};
+
 const sheet = new CSSStyleSheet();
 sheet.replaceSync(`
   :host, frosted-glass-inner {
@@ -16,13 +22,32 @@ sheet.replaceSync(`
     --right-border-offset: 0;
     --bottom-border-offset: 0;
     --left-border-offset: 0;
-    --ice-color: 255, 255, 255;
-    --ice-opacity: .15;
+    
+    /* Base state variables. It allows us to use it as default for both current
+     * and melted states. E.g. creating a direct dependency between --ice-color
+     * and --melted-ice-color (or other vars) would short circuit the value and
+     * not work, thus we use base variables as intermediaries. */
+    --base-ice-color: ${defaultCssVars['--base-ice-color']};
+    --base-ice-opacity: ${defaultCssVars['--base-ice-opacity']};
+    --base-z-index: ${defaultCssVars['--base-z-index']};
+
+    /* Current state variables. This changes based on the element's state. */
+    --ice-color: var(--base-ice-color);
+    --ice-opacity: var(--base-ice-opacity);
+    --z-index: var(--base-z-index);
+
+    /* Melted state variables. This can be set as desired, but don't depend on
+     *--ice-color, --ice-opacity, or --z-index etc, because it would create a
+     * circular dependency. */
+    --melted-ice-color: var(--base-ice-color);
+    --melted-ice-opacity: var(--base-ice-opacity);
+    --melted-z-index: var(--base-z-index);
 
     /** The effect shouldn't interfere with the pointer events of the underlying content. */
     /** Use events on parent element instead of the glass element */
     pointer-events: none;
 
+    z-index: var(--z-index);
     display: block;
     position: absolute;
 
@@ -57,6 +82,10 @@ sheet.replaceSync(`
   }
 
   :host(:state(melted)) frosted-glass-inner {
+    --ice-color: var(--melted-ice-color, var(--base-ice-color));
+    --ice-opacity: var(--melted-ice-opacity, var(--base-ice-opacity));
+    --z-index: var(--melted-z-index, var(--base-z-index));
+
     box-shadow: 0 0 8px rgba(var(--ice-color), calc(var(--ice-opacity) * 3.33)),
       inset 0 0 3px 0 rgba(var(--ice-color), calc(var(--ice-opacity) * 3.33));
   }
@@ -68,24 +97,12 @@ class FrostedGlass extends HTMLElement {
 
   // Observe the 'color-rgb', 'opacity', and 'z-index' attributes for changes
   static get observedAttributes() {
-    return ['color-rgb', 'opacity', 'z-index', 'colorrgb'];
-  }
-  /**
-   * Gets the z-index attribute value.
-   */
-  get zIndex() {
-    return this.getAttribute('z-index');
-  }
-
-  /**
-   * Sets the z-index attribute value.
-   */
-  set zIndex(value) {
-    if (value !== null && value !== undefined) {
-      this.setAttribute('z-index', value);
-    } else {
-      this.removeAttribute('z-index');
-    }
+    // Add melted-* attributes for each existing attribute
+    const attrs = ['color-rgb', 'opacity', 'z-index'];
+    return [
+      ...attrs,
+      ...attrs.map(attr => `melted-${attr}`)
+    ];
   }
 
   get melted() {
@@ -100,41 +117,6 @@ class FrostedGlass extends HTMLElement {
     }
   }
 
-  /**
-   * Gets the color-rgb attribute value.
-   */
-  get colorRgb() {
-    return this.getAttribute('color-rgb');
-  }
-
-  /**
-   * Sets the color-rgb attribute value.
-   */
-  set colorRgb(value) {
-    if (value) {
-      this.setAttribute('color-rgb', value);
-    } else {
-      this.removeAttribute('color-rgb');
-    }
-  }
-
-  /**
-   * Gets the opacity attribute value.
-   */
-  get opacity() {
-    return this.getAttribute('opacity');
-  }
-
-  /**
-   * Sets the opacity attribute value.
-   */
-  set opacity(value) {
-    if (value !== null && value !== undefined) {
-      this.setAttribute('opacity', value);
-    } else {
-      this.removeAttribute('opacity');
-    }
-  }
 
   constructor() {
     super();
@@ -172,20 +154,7 @@ class FrostedGlass extends HTMLElement {
     this._inner.style.setProperty('--bottom-border-offset', '-' + borderSize.bottom);
     this._inner.style.setProperty('--left-border-offset', '-' + borderSize.left);
 
-    // If color-rgb attribute is present, set the --ice-color CSS variable
-    if (this.colorRgb) {
-      this.setIceColorFromAttribute(this.colorRgb);
-    }
-
-    // If opacity attribute is present, set the --ice-opacity CSS variable
-    if (this.opacity) {
-      this.setIceOpacityFromAttribute(this.opacity);
-    }
-
-    // If z-index attribute is present, set the z-index style
-    if (this.zIndex) {
-      this.setZIndexFromAttribute(this.zIndex);
-    }
+    this.applyAttributes();
   }
 
   disconnectedCallback() {
@@ -198,57 +167,74 @@ class FrostedGlass extends HTMLElement {
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
-    if (name === 'color-rgb') {
-      this.setIceColorFromAttribute(newValue);
-    } else if (name === 'opacity') {
-      this.setIceOpacityFromAttribute(newValue);
-    } else if (name === 'z-index') {
-      this.setZIndexFromAttribute(newValue);
-    }
-  }
-  /**
-   * Sets the z-index style property on the inner element from the z-index attribute.
-   * Accepts any valid CSS z-index value (number or 'auto').
-   */
-  setZIndexFromAttribute(value) {
-    if (value === null || value === undefined || value === '') {
-      this._inner.style.removeProperty('z-index');
-      return;
-    }
-    this._inner.style.zIndex = value;
-  }
-  /**
-   * Sets the --ice-opacity CSS variable from the opacity-coefficient attribute.
-   * Accepts any number, just CSS opacity.
-   */
-  setIceOpacityFromAttribute(value) {
-    const num = parseFloat(value);
-    if (isNaN(num)) {
-      console.error('opacity-coefficient attribute must be a number.');
-      return;
-    }
-    this._inner.style.setProperty('--ice-opacity', num);
+    this.applyAttributes();
   }
 
-  /**
-   * Sets the --ice-color CSS variable on the inner element if the value is a valid RGB string.
-   * Only accepts the format "r,g,b" where r, g, b are integers 0-255.
-   */
-  setIceColorFromAttribute(value) {
-    if (typeof value !== 'string') {
-      console.error('color-rgb attribute must be a string in the format "r,g,b"');
-      return;
-    };
-    // Validate the format: "r,g,b" where r,g,b are 0-255
-    const rgbPattern = /^\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*$/;
-    const match = value.match(rgbPattern);
-    if (!match) {
-      console.error('color-rgb attribute must be in the format "r,g,b" with values between 0 and 255');
-      return;
-    }
+  applyAttributes() {
+    for (const attr of this.constructor.observedAttributes) {
+      const value = this.getAttribute(attr);
+      const isMeltedAttr = attr.startsWith('melted-');
+      const attrName = isMeltedAttr ? attr.replace('melted-', '') : attr;
 
-    const [r, g, b] = match.slice(1, 4);
-    this._inner.style.setProperty('--ice-color', `${r}, ${g}, ${b}`);
+      switch (attrName) {
+        case 'color-rgb':
+          if (value === null || value === undefined || value === '') {
+            if (isMeltedAttr) {
+              this._inner.style.removeProperty('--melted-ice-color');
+            } else {
+              this._inner.style.setProperty('--base-ice-color', defaultCssVars['--base-ice-color']);
+            }
+            continue;
+          }
+
+          // Validate the format: "r,g,b" where r,g,b are 0-255
+          const rgbPattern = /^\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*$/;
+          const match = value.match(rgbPattern);
+          if (!match) {
+            console.error(`${attr} attribute must be in the format "r,g,b" with values between 0 and 255`);
+            continue;
+          }
+
+          const [r, g, b] = match.slice(1, 4);
+          const cssVar = isMeltedAttr ? '--melted-ice-color' : '--base-ice-color';
+          this._inner.style.setProperty(cssVar, `${r}, ${g}, ${b}`);
+          continue;
+
+        case 'opacity':
+          if (value === null || value === undefined || value === '') {
+            if (isMeltedAttr) {
+              this._inner.style.removeProperty('--melted-ice-opacity');
+            } else {
+              this._inner.style.setProperty('--base-ice-opacity', defaultCssVars['--base-ice-opacity']);
+            }
+            continue;
+          }
+
+          const num = parseFloat(value);
+          if (isNaN(num)) {
+            console.error(`${attr} attribute must be a number.`);
+            continue;
+          }
+
+          const opacityVar = isMeltedAttr ? '--melted-ice-opacity' : '--base-ice-opacity';
+          this._inner.style.setProperty(opacityVar, num);
+          continue;
+
+        case 'z-index':
+          if (value === null || value === undefined || value === '') {
+            if (isMeltedAttr) {
+              this._inner.style.removeProperty('--melted-z-index');
+            } else {
+              this._inner.style.setProperty('--base-z-index', defaultCssVars['--base-z-index']);
+            }
+            continue;
+          }
+
+          const zIndexVar = isMeltedAttr ? '--melted-z-index' : '--base-z-index';
+          this._inner.style.setProperty(zIndexVar, value);
+          continue;
+      }
+    }
   }
 
   static getSizeOfBorders(el) {
