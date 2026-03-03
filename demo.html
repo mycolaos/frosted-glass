@@ -88,12 +88,39 @@
     </section>
     <section>
       <h2>
-        Links with various default and melting opacities (hover to see)
+        Links with various prop combos (hover to see)
       </h2>
       <div class="items-container [&>a]:px-2 [&>a]:py-0.5">
-        <a class="underline" href="#">Link
-          <!-- More opaque example -->
+        <a class="underline" href="#">Opacity contrast
           <frosted-glass opacity=".3" melted-opacity=".05"></frosted-glass>
+        </a>
+        <a class="underline" href="#">Blue to White
+          <frosted-glass color-rgb="0,123,255" melted-color-rgb="255,255,255"></frosted-glass>
+        </a>
+        <a class="underline text-pink-600" href="#">Dark to Light Pink
+          <frosted-glass color-rgb="128,0,128" melted-color-rgb="255,192,203"></frosted-glass>
+        </a>
+        <a class="underline text-green-700 text-white" href="#">
+          <span class="relative z-10">Layer depth change 1</span>
+          <frosted-glass opacity=".25" color-rgb="57,255,20" z-index="20" melted-z-index="0"></frosted-glass>
+        </a>
+        <a class="underline" href="#">Opacity contrast reversed
+          <frosted-glass opacity=".05" melted-opacity=".3"></frosted-glass>
+        </a>
+        <a class="underline text-white bg-purple-700" href="#">
+          <span class="relative z-10">Layer depth change 2</span>
+          <frosted-glass opacity=".22" color-rgb="0,0,0" z-index="20" melted-z-index="0"></frosted-glass>
+        </a>
+        <a class="underline text-yellow-700" href="#">Color and opacity change
+          <frosted-glass opacity=".18" melted-opacity=".05" color-rgb="57,255,20"
+            melted-color-rgb="255,255,0"></frosted-glass>
+        </a>
+        <!-- Strong effect combo with styled parent -->
+        <a class="underline rounded-xl text-white font-bold shadow-lg"
+          style="background: linear-gradient(90deg, #ff0080, #7928ca);" href="#">Dramatic Glass
+          <frosted-glass opacity="0.35" melted-opacity="0.15" color-rgb="0,10,40" melted-color-rgb="255,255,0"
+            z-index="30" melted-z-index="0">
+          </frosted-glass>
         </a>
       </div>
     </section>
