@@ -1,6 +1,17 @@
 # \<frosted-glass\> Web Component
 This effect creates a frosted glass appearance over any element, simulating the look of ice crystals forming on a cold window. It uses a combination of blur, subtle noise, and crystalline patterns to achieve a realistic icy overlay.
 
+Screenshots:
+
+![Frosted Glass Text](text.png)
+
+![Frosted Glass Winter theme](winter.png)
+
+![Frosted Glass Neon theme](neon.png)
+
+See demo for dynamic examples with melted effect on hover.
+[https://mycolaos.com/demos/frosted-glass/](https://mycolaos.com/demos/frosted-glass/)
+
 ## Features
 
 - Realistic frosted glass effect (blur, crystalline pattern)
